@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ML Dashboard</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    (function() {
+      let initialized = false;
+
+      function initWidget() {
+        const container = document.getElementById('google_translate_element');
+        if (!container) return false;
+        if (initialized) return true;
+        if (typeof google === 'undefined' || !google.translate) return false;
+
+        // Nettoyer le conteneur avant d'ajouter le widget (supprime les doublons)
+        container.innerHTML = '';
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,fr,ar',
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+        initialized = true;
+        return true;
+      }
+
+      function tryInit() {
+        if (initWidget()) return;
+        setTimeout(tryInit, 200);
+      }
+
+      // Évite d'ajouter plusieurs fois le script
+      if (!document.getElementById('google-translate-script')) {
+        const script = document.createElement('script');
+        script.id = 'google-translate-script';
+        script.src = '//translate.google.com/translate_a/element.js?cb=initGoogleTranslate';
+        script.async = true;
+        document.head.appendChild(script);
+      }
+
+      // Callback appelé par le script Google
+      window.initGoogleTranslate = function() {
+        tryInit();
+      };
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

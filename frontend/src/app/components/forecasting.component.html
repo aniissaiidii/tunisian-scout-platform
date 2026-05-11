@@ -1,0 +1,111 @@
+<div class="forecasting-container">
+  <h1>🕐 Future Forecasts</h1>
+  <p class="page-description">
+    See what to expect in the future! Our system looks at <strong>past trends</strong> to forecast upcoming 
+    participation numbers — helping you plan activities, prepare resources, and set expectations.
+  </p>
+
+  <div *ngIf="loading" class="loading">
+    <div class="loading-spinner"></div>
+    <p>Generating forecasts...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>❌ {{ error }}</p>
+    <button (click)="loadForecastingModels()" class="retry-btn">Try Again</button>
+  </div>
+
+  <div *ngIf="bestModel && !loading && !error" class="content">
+
+    <!-- Hero Card -->
+    <div class="hero-card" [ngClass]="getMapeLevel(bestMetrics.mape)">
+      <div class="hero-icon">{{ getMapeEmoji(bestMetrics.mape) }}</div>
+      <div class="hero-content">
+        <h2>Forecast Accuracy</h2>
+        <div class="hero-value">{{ getForecastAccuracy() }}%</div>
+        <p class="hero-subtitle">{{ getMapeMessage(bestMetrics.mape) }}</p>
+      </div>
+      <div class="hero-gauge">
+        <svg viewBox="0 0 120 120" class="gauge-svg">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="white" stroke-width="10"
+                  [attr.stroke-dasharray]="getGaugeDash()"
+                  stroke-dashoffset="0" stroke-linecap="round"
+                  transform="rotate(-90 60 60)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Data Summary -->
+    <div class="data-summary" *ngIf="timeSeriesData">
+      <div class="summary-card">
+        <span class="summary-icon">📚</span>
+        <div>
+          <span class="summary-value">{{ timeSeriesData.train_size | number }}</span>
+          <span class="summary-text">historical records used to learn patterns</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <span class="summary-icon">🔍</span>
+        <div>
+          <span class="summary-value">{{ timeSeriesData.test_size | number }}</span>
+          <span class="summary-text">recent records used to verify accuracy</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- What This Means -->
+    <div class="insight-card">
+      <h2>💡 What Does This Mean?</h2>
+      <div class="insight-content">
+        <div class="insight-item">
+          <span class="insight-bullet good">●</span>
+          <p>Our forecasts are <strong>{{ getForecastAccuracy() }}% accurate</strong> — meaning they closely match what actually happens.</p>
+        </div>
+        <div class="insight-item">
+          <span class="insight-bullet">●</span>
+          <p>On average, forecasts differ from reality by about <strong>{{ bestMetrics.mae.toFixed(1) }} units</strong>.</p>
+        </div>
+        <div class="insight-item">
+          <span class="insight-bullet">●</span>
+          <p>Use these forecasts to <strong>plan ahead</strong> — prepare the right amount of supplies, venues, and leaders for upcoming activities.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forecast Preview -->
+    <div class="forecast-preview" *ngIf="forecastData">
+      <h2>📊 Forecast vs Reality (Recent Periods)</h2>
+      <p class="section-hint">How our forecasts compared to what actually happened:</p>
+
+      <div class="forecast-items">
+        <div *ngFor="let item of getForecastItems()" class="forecast-item" [ngClass]="item.class">
+          <div class="fi-period">
+            <span class="fi-number">{{ item.index }}</span>
+          </div>
+          <div class="fi-bars">
+            <div class="fi-bar-row">
+              <span class="fi-label">Actual</span>
+              <div class="fi-bar">
+                <div class="fi-bar-fill actual-fill" [style.width.%]="item.actualPct"></div>
+              </div>
+              <span class="fi-value">{{ item.actual }}</span>
+            </div>
+            <div class="fi-bar-row">
+              <span class="fi-label">Forecast</span>
+              <div class="fi-bar">
+                <div class="fi-bar-fill forecast-fill" [style.width.%]="item.predictedPct"></div>
+              </div>
+              <span class="fi-value">{{ item.predicted }}</span>
+            </div>
+          </div>
+          <div class="fi-accuracy">
+            <span class="fi-acc-value">{{ item.accuracy }}</span>
+            <span class="fi-acc-label">match</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

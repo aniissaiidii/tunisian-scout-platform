@@ -1,0 +1,13 @@
+<div class="dashboard-wrapper">
+  <!-- Fawj sees all dashboards (or a special fawj dashboard) -->
+  <app-fawj-dashboard *ngIf="userRole === 'fawj'"></app-fawj-dashboard>
+
+  <!-- Unit sees only unit dashboard -->
+  <app-unit-dashboard *ngIf="userRole === 'unit'"></app-unit-dashboard>
+
+  <!-- Treasurer sees treasurer dashboard -->
+  <app-treasurer-dashboard *ngIf="userRole === 'treasurer'"></app-treasurer-dashboard>
+
+  <!-- International sees international dashboard -->
+  <app-international-dashboard *ngIf="userRole === 'international'"></app-international-dashboard>
+</div>

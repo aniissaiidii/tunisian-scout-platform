@@ -1,0 +1,43 @@
+services:
+  # ── Backend API (FastAPI + ML Models) ──
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: ml-dashboard-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend/models:/app/models
+      - ./backend/data:/app/data
+      - ./backend/mlruns:/app/mlruns
+    networks:
+      - ml-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # ── Frontend (Angular + Nginx) ──
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: ml-dashboard-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - ml-network
+    restart: unless-stopped
+
+networks:
+  ml-network:
+    driver: bridge
