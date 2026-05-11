@@ -1,0 +1,15 @@
+<div class="treasurer-dashboard-wrapper">
+  <div class="report-header">
+    <h2>💰 Treasurer Dashboard</h2>
+    <p>Financial overview, budget tracking, and expense reports</p>
+  </div>
+  <div class="powerbi-container">
+    <iframe 
+      [src]="treasurerReportUrl | safeUrl"
+      width="100%" 
+      height="100%" 
+      frameborder="0" 
+      allowFullScreen="true">
+    </iframe>
+  </div>
+</div>

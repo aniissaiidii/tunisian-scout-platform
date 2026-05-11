@@ -1,0 +1,41 @@
+<div class="fawj-layout">
+  <!-- Left Sidebar -->
+  <aside class="sidebar">
+    <h3>📋 Dashboards</h3>
+    <nav class="side-nav">
+      <button 
+        (click)="setDashboard('overall')" 
+        [class.active]="activeDashboard === 'overall'">
+        📊 Overall Dashboard
+      </button>
+      <button 
+        (click)="setDashboard('treasury')" 
+        [class.active]="activeDashboard === 'treasury'">
+        💰 Treasurer Dashboard
+      </button>
+      <button 
+        (click)="setDashboard('international')" 
+        [class.active]="activeDashboard === 'international'">
+        🌍 International Dashboard
+      </button>
+      <button 
+        (click)="setDashboard('unit')" 
+        [class.active]="activeDashboard === 'unit'">
+        🏕️ Unit Dashboards
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main Content: Active Power BI Report -->
+  <main class="dashboard-content">
+    <div class="powerbi-container">
+      <iframe 
+        [src]="dashboards[activeDashboard] | safeUrl"
+        width="100%" 
+        height="650" 
+        frameborder="0" 
+        allowFullScreen="true">
+      </iframe>
+    </div>
+  </main>
+</div>
